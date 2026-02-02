@@ -1,6 +1,6 @@
 {
   "name": "session-utils",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Session management utilities with manual commands for setup, summarization and resume capabilities, plus autonomous summarization agent",
   "author": {
     "name": "Session Utils Community",

@@ -2,6 +2,14 @@
 
 Enhanced session management utilities for Claude Code with intelligent summarization capabilities. Builds on session memory concepts with autonomous agents for comprehensive analysis.
 
+## Quick Start
+
+1. **[Install](docs/installation.md)** the plugin in Claude Code
+2. **Setup** your project with `/session:setup`
+3. **Use the commands** to manage sessions:
+   - `/session:summarize` - Create session summaries
+   - `/session:resume` - Resume previous sessions
+
 ## Features
 
 - **Manual Command Interface**: Clean user commands for session management operations
@@ -10,15 +18,23 @@ Enhanced session management utilities for Claude Code with intelligent summariza
 - **Template-Driven Structure**: Consistent, comprehensive session documentation
 - **Local Project Storage**: Session files stored within your project directories
 
+## Documentation
+
+Detailed documentation is available in the [docs/](docs/) directory:
+
+- **[Commands](docs/commands.md)** - Full command reference
+- **[Architecture](docs/architecture.md)** - Agent design and implementation
+- **[Workflow](docs/workflow.md)** - Complete usage guide
+- **[Testing](docs/testing.md)** - Testing instructions and checklist
+- **[Benefits](docs/benefits.md)** - Strategic advantages
+
 ## Installation
 
 Install globally in Claude Code:
 
 ```bash
-/plugin install https://github.com/YOUR_USERNAME/session-utils
+/plugin install https://github.com/agrohe21/session-utils
 ```
-
-Replace `YOUR_USERNAME` with your GitHub username.
 
 ## Commands
 
