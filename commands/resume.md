@@ -1,65 +1,68 @@
 ---
 name: session:resume
 description: Display highlighted session context and automatically create actionable tasks from outstanding items to effectively resume previous work.
-parameters: []
+parameters: [{"name":"auto-confirm","description":"Skip user confirmation and automatically create all found tasks (default: false)","type":"boolean"}]
 ---
 
-Please help resume work by displaying the most recent session summary, analyzing referenced materials through subagents, and directing resumption of the highest priority work.
+Help resume previous work sessions by displaying context, extracting actionable tasks, and launching analysis subagents.
 
-## Session Resume Process
+**Step 1: Locate Most Recent Session**
+Find the newest session summary file by listing files in `.claude/memory/sessions/` and selecting the most recent modification date.
 
-1. **Locate recent session file**: Find the most recent file in `.claude/memory/sessions/` with pattern `[YYYY-MM-DD]-*.md`
+**Step 2: Display Session Summary**
+Read and display the complete session summary with clear section highlighting using markdown headers and emphasis.
 
-2. **Display full summary**: Show the complete content of the last session file
+**Step 3: Extract Outstanding Tasks**
+Use Grep to find numbered or bulleted items in the "Outstanding Tasks & Next Steps" section of the session file.
 
-3. **Highlight key sections**: Add clear visual markers to emphasize important information:
-   - **Outstanding Tasks & Next Steps** - what should be worked on next
-   - **Current State** - where things stand currently
-   - **Issues & Blockers Encountered** - any unresolved challenges
-   - **Critical Context** and **Technical Context to Remember** - important background
+**Step 4: Check Confirmation Settings**
+Read `.claude-plugin/settings.local.json` to check the `plugins.session-utils.resume.autoConfirmTasks` setting.
 
-4. **Extract and create tasks**: Parse the "Outstanding Tasks & Next Steps" section and create tasks using the TaskCreate tool for each identified next step, making them actionable work items
+**Step 5: User Confirmation Workflow**
+If autoConfirmTasks is false, use AskUserQuestion to present extracted tasks for user approval with multi-select options.
 
-5. **Launch Analysis Subagents**: After displaying the summary and creating tasks, actively resume work by launching specialized subagents to analyze referenced files and task state:
-   - **Reference Parser Agent**: Parses summary for file references, plan locations, and task references
-   - **Task Creation Agent**: Extracts tasks from "Outstanding Tasks & Next Steps" section and creates them automatically
-   - **Plan/Task Finder Agent**: Scans standard directories (~/.claude/plans/, ~/.claude/tasks/, project equivalents) for referenced materials
-   - **Git Context Agent**: Checks current git status and recent commit history
-   - **Content Reader Agent**: Reads all referenced plans, tasks, and context files autonomously
+**Step 6: Create Approved Tasks**
+For each user-approved task, use TaskCreate to create actionable work items with appropriate subjects and descriptions.
 
-6. **Resume Work**: Based on subagent analysis and newly created tasks, direct Claude to begin working on the highest priority next steps identified from plans, tasks, and git context.
+**Step 7: Launch Analysis Subagents**
+Execute analysis subagents to gather additional context:
 
-7. **If no session files exist**: Inform the user that no previous sessions are available and suggest using `/session:summarize` after doing some work.
+**Launch Reference Analysis Subagent:**
+Use Task tool with Explore subagent to examine referenced files and plans:
+```
+subagent_type: Explore
+description: "Extract and analyze file references from session summary"
+prompt: "Find all file paths, plan references, and technical context mentioned in: [session_content]"
+```
 
-## Subagent Design
+**Launch Git Context Analysis:**
+Use Bash commands to assess current repository state:
+- **`git status --porcelain`** to check working directory changes
+- **`git branch --show-current`** to identify current branch
+- **`git log --oneline -3`** to review recent commits
 
-### Task Creation Agent
-- Input: Session summary content, specifically "Outstanding Tasks & Next Steps" section
-- Task: Parse the Outstanding Tasks & Next Steps section to extract individual actionable items, and create tasks using TaskCreate tool for each one
-- Output: List of created task IDs with their subjects and descriptions
+**Launch Plan/Task Review Subagent:**
+Use Task tool with general-purpose subagent to analyze plan and task state:
+```
+subagent_type: general-purpose
+description: "Analyze referenced plans and evaluate task status"
+prompt: "Check for any plans or task files referenced in this session and assess their current validity: [session_content]"
+```
 
-### Reference Parser Agent
-- Input: Session summary content
-- Task: Extract file references, plan locations, task references
-- Output: Structured list of files to read, plan files to find, task references to locate
+**Step 8: Coordinate Subagent Results**
+Combine findings from all subagents to create a comprehensive resumption strategy:
 
-### Plan/Task Finder Agent
-- Input: Reference list from parser
-- Task: Scan standard directories (~/.claude/plans/, ~/.claude/tasks/, project equivalents)
-- Output: Found files with their locations and modification dates
+**Integration Analysis:**
+- Cross-reference file analysis with git status
+- Validate plan references against current repository state
+- Align task priorities with technical context findings
 
-### Git Context Agent
-- Input: Current working directory, recent session context
-- Task: Run git status, recent log (last 5-10 commits)
-- Output: Current branch state, recent changes, uncommitted work
+**Direct Next Work:**
+Provide specific recommendations for highest priority actions based on:
+- User-approved tasks from confirmation workflow
+- Subagent analysis of technical state and referenced plans
+- Integration of session context with current repository conditions
+- Clear prioritization of high-value immediate actions
 
-### Content Reader Agent
-- Input: File list from finder agent
-- Task: Read all referenced plans, tasks, and context files
-- Output: Summarized content from all relevant materials
-
-## Presentation Format
-
-Structure the response to clearly indicate this is from a previous session, with the filename date/topic clearly identified at the top, followed by the full summary content with highlighted key sections. After displaying the summary and creating tasks from the outstanding items, launch the analysis subagents and provide direction for resuming the highest priority work.
-
-The goal is to provide comprehensive context while actively resuming progress on pending work through task creation and subagent analysis.
+**Error Handling:**
+If no session files exist, inform the user and suggest running `/session:summarize` after working on something first.
