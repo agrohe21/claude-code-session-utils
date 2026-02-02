@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "description": "Session management utilities with manual commands for setup, summarization and resume capabilities, plus autonomous summarization agent",
   "author": {
-    "name": "Claude Opus 4.5",
-    "email": "noreply@anthropic.com"
+    "name": "Session Utils Community",
+    "email": "agrohe21@gmail.com"
   },
-  "homepage": "https://github.com/yourusername/session-utils",
-  "repository": "https://github.com/yourusername/session-utils",
+  "homepage": "https://github.com/agrohe21/session-utils",
+  "repository": "https://github.com/agrohe21/session-utils",
   "keywords": ["session-management", "productivity", "summarization", "conversation-analysis"]
 }

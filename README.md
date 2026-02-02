@@ -15,8 +15,10 @@ Enhanced session management utilities for Claude Code with intelligent summariza
 Install globally in Claude Code:
 
 ```bash
-/plugin install https://github.com/yourusername/session-utils
+/plugin install https://github.com/YOUR_USERNAME/session-utils
 ```
+
+Replace `YOUR_USERNAME` with your GitHub username.
 
 ## Commands
 
@@ -52,7 +54,8 @@ Display context from the most recent session to continue work:
 2. **Setup Project**: In your project: `/session:setup`
 3. **Work Session**: Have discussions, make technical progress, strategize
 4. **Generate Summary**: Run `/session:summarize` when reaching natural breakpoints
-5. **Resume Later**: Start new session with `/session:resume` to regain full context
+5. **End Session**: Clear context, exit Claude Code
+6. **Resume Later**: Start new session with `/session:resume` to regain full context
 
 ## Directory Structure
 
