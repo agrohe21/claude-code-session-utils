@@ -60,6 +60,10 @@ cat > .claude/memory/sessions/session-summary-template.md << 'EOF_TEMPLATE'
 - [Key learnings, patterns, or architectural insights discovered]
 - [Strategic decisions or approaches that shaped the work]
 
+## Artifacts Referenced
+- **[Artifact Title]** (`[type: code|document|svg|react|etc]`): [Brief description of what this artifact contains and why it was created]
+- [Or "None" if no artifacts were created or referenced in this session]
+
 ## Technical Context to Remember
 - **Files modified:** [list key files with brief impact]
 - **Configuration changes:** [any config updates made]
